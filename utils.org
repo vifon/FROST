@@ -3,6 +3,8 @@ GNU Emacs org-mode with org-babel to generate the actual script files.
 For convenience these generated files are also commited into the
 repository.
 
+See: [[https://en.wikipedia.org/wiki/Literate_programming][Literate programming - Wikipedia]]
+
 * Maintenance
   :PROPERTIES:
   :header-args+: :tangle "maintenance.sh"

@@ -43,7 +43,7 @@ For searching it is possible to use the generic tools like *grep(1)*,
 
 At this point *FROST* is no longer strictly a software project. It's
 more of an idea or a loose specification with some optional helper
-scripts.
+scripts (see: [utils.org](utils.org)).
 
 Examples
 --------
