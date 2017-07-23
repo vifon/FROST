@@ -48,6 +48,7 @@ See: [[https://en.wikipedia.org/wiki/Literate_programming][Literate programming 
 
   Parse the commandline options.
   #+BEGIN_SRC sh
+    ARGS=""
     while getopts "q" ARG; do
         case "$ARG" in
             q)

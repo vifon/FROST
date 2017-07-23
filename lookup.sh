@@ -1,6 +1,7 @@
 #!/bin/bash
 set -eu
 
+ARGS=""
 while getopts "q" ARG; do
     case "$ARG" in
         q)
