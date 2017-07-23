@@ -1,0 +1,108 @@
+This file is used to store all the FROST helper scripts. It uses
+GNU Emacs org-mode with org-babel to generate the actual script files.
+For convenience these generated files are also commited into the
+repository.
+
+* Maintenance
+  :PROPERTIES:
+  :header-args+: :tangle "maintenance.sh"
+  :header-args+: :shebang "#!/bin/bash"
+  :END:
+
+  A Bash script keeping the repository semantically correct.
+  
+  Abort on any error or undefined variable.
+  #+BEGIN_SRC sh
+    set -eu
+  #+END_SRC
+  
+  
+  Make all the directories, even the empty ones, storable in Git.
+  #+BEGIN_SRC sh
+    find * -type d |
+        while read
+        do
+            if [ ! -e "$REPLY/.gitkeep" ]; then
+                echo "Creating $REPLY/.gitkeep"
+                touch "$REPLY/.gitkeep"
+            fi
+        done
+  #+END_SRC
+
+** TODO COMMENT Argument parsing; dry run mode
+
+* Lookup
+  :PROPERTIES:
+  :header-args+: :tangle "lookup.sh"
+  :header-args+: :shebang "#!/bin/bash"
+  :END:
+
+  A Bash script listing the matching files's contents.
+
+  Abort on any error or undefined variable.
+  #+BEGIN_SRC sh
+    set -eu
+  #+END_SRC
+
+  Parse the commandline options.
+  #+BEGIN_SRC sh
+    while getopts "q" ARG; do
+        case "$ARG" in
+            q)
+                ARGS+=" --quiet"
+            ;;
+            '?')
+            ;;
+        esac
+    done
+    shift $((OPTIND-1))
+  #+END_SRC
+
+  Find all the matching items and pass them to [[*Show][Show]].
+  #+BEGIN_SRC sh
+    find * -name "*$1*" -type f -exec ./show.py $ARGS '{}' '+'
+  #+END_SRC
+
+* Show
+  :PROPERTIES:
+  :header-args+: :tangle "show.py"
+  :header-args+: :shebang "#!/usr/bin/env python3"
+  :END:
+
+  A Python script pretty-printing an item. Accepts =--quiet= to skip
+  the details even when available.
+
+  #+BEGIN_SRC python
+    from os.path import getsize
+    import argparse
+    import sys
+
+    if sys.stdout.isatty():
+        DATA_COLOR = "\033[32m"
+        RESET_COLOR = "\033[0m"
+    else:
+        DATA_COLOR = ""
+        RESET_COLOR = ""
+
+    INDENT = 2
+
+
+    def main(argv=None):
+        parser = argparse.ArgumentParser()
+        parser.add_argument('assets', nargs='+')
+        parser.add_argument('--quiet', '-q', action='store_true')
+        args = parser.parse_args()
+        for asset in args.assets:
+            print(asset)
+            if not args.quiet and getsize(asset) > 0:
+                print(DATA_COLOR, end="")
+                with open(asset, 'r') as asset_fh:
+                    for line in asset_fh:
+                        print(INDENT * " " + line, end="")
+                print(RESET_COLOR, end="")
+
+
+    if __name__ == '__main__':
+        main(sys.argv)
+  #+END_SRC
+
