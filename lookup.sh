@@ -13,4 +13,4 @@ while getopts "q" ARG; do
 done
 shift $((OPTIND-1))
 
-find * -name "*$1*" -type f -exec ./show.py $ARGS '{}' '+'
+find * -iname "*$1*" -type f -exec ./show.py $ARGS '{}' '+'

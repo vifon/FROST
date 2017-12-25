@@ -63,7 +63,7 @@ See: [[https://en.wikipedia.org/wiki/Literate_programming][Literate programming 
 
   Find all the matching items and pass them to [[*Show][Show]].
   #+BEGIN_SRC sh
-    find * -name "*$1*" -type f -exec ./show.py $ARGS '{}' '+'
+    find * -iname "*$1*" -type f -exec ./show.py $ARGS '{}' '+'
   #+END_SRC
 
 * Show
